@@ -1,0 +1,154 @@
+<UserControl x:Class="RDUserControl.Views.DashboardPage"
+             xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
+             xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
+             xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006" 
+             xmlns:d="http://schemas.microsoft.com/expression/blend/2008" 
+             xmlns:local="clr-namespace:RDUserControl.Views"
+             xmlns:ui="http://schemas.lepo.co/wpfui/2022/xaml"
+             mc:Ignorable="d" 
+             d:DesignHeight="450" d:DesignWidth="800">
+    
+    <Grid>
+        <Grid.RowDefinitions>
+            <RowDefinition Height="Auto"/>
+            <RowDefinition Height="*"/>
+        </Grid.RowDefinitions>
+        
+        <ui:CardControl Grid.Row="0" Margin="0,0,0,12" Icon="Home24">
+            <ui:CardControl.Header>
+                <TextBlock Text="Dashboard" FontSize="24" FontWeight="Bold"/>
+            </ui:CardControl.Header>
+            <StackPanel>
+                <ui:Button 
+                    Appearance="Primary" 
+                    Content="Refresh" 
+                    Icon="ArrowClockwise24" 
+                    Command="{Binding RefreshCommand}"
+                    HorizontalAlignment="Right"
+                    Margin="0,8,0,0"/>
+            </StackPanel>
+        </ui:CardControl>
+        
+        <Grid Grid.Row="1">
+            <Grid.ColumnDefinitions>
+                <ColumnDefinition Width="*"/>
+                <ColumnDefinition Width="*"/>
+            </Grid.ColumnDefinitions>
+            <Grid.RowDefinitions>
+                <RowDefinition Height="*"/>
+                <RowDefinition Height="*"/>
+            </Grid.RowDefinitions>
+            
+            <!-- User Statistics Card -->
+            <ui:CardControl 
+                Grid.Column="0" 
+                Grid.Row="0" 
+                Margin="0,0,6,6" 
+                Icon="People24">
+                <ui:CardControl.Header>
+                    <TextBlock Text="User Statistics" FontWeight="SemiBold"/>
+                </ui:CardControl.Header>
+                <StackPanel>
+                    <Grid Margin="0,12,0,0">
+                        <Grid.ColumnDefinitions>
+                            <ColumnDefinition Width="*"/>
+                            <ColumnDefinition Width="Auto"/>
+                        </Grid.ColumnDefinitions>
+                        <TextBlock Text="Total Users" Grid.Column="0"/>
+                        <TextBlock Text="{Binding TotalUsers}" Grid.Column="1" FontWeight="SemiBold"/>
+                    </Grid>
+                    <Grid Margin="0,8,0,0">
+                        <Grid.ColumnDefinitions>
+                            <ColumnDefinition Width="*"/>
+                            <ColumnDefinition Width="Auto"/>
+                        </Grid.ColumnDefinitions>
+                        <TextBlock Text="Enabled Users" Grid.Column="0"/>
+                        <TextBlock Text="{Binding EnabledUsers}" Grid.Column="1" FontWeight="SemiBold"/>
+                    </Grid>
+                    <Grid Margin="0,8,0,0">
+                        <Grid.ColumnDefinitions>
+                            <ColumnDefinition Width="*"/>
+                            <ColumnDefinition Width="Auto"/>
+                        </Grid.ColumnDefinitions>
+                        <TextBlock Text="RDP Enabled Users" Grid.Column="0"/>
+                        <TextBlock Text="{Binding RdpEnabledUsers}" Grid.Column="1" FontWeight="SemiBold"/>
+                    </Grid>
+                </StackPanel>
+            </ui:CardControl>
+            
+            <!-- System Status Card -->
+            <ui:CardControl 
+                Grid.Column="1" 
+                Grid.Row="0" 
+                Margin="6,0,0,6" 
+                Icon="DesktopFlow24">
+                <ui:CardControl.Header>
+                    <TextBlock Text="System Status" FontWeight="SemiBold"/>
+                </ui:CardControl.Header>
+                <StackPanel>
+                    <Grid Margin="0,12,0,0">
+                        <Grid.ColumnDefinitions>
+                            <ColumnDefinition Width="*"/>
+                            <ColumnDefinition Width="Auto"/>
+                        </Grid.ColumnDefinitions>
+                        <TextBlock Text="RDP Service Status" Grid.Column="0"/>
+                        <TextBlock 
+                            Text="{Binding SystemRdpEnabled, Converter={StaticResource BoolToStatusConverter}}" 
+                            Grid.Column="1" 
+                            FontWeight="SemiBold"
+                            Foreground="{Binding SystemRdpEnabled, Converter={StaticResource BoolToColorConverter}}"/>
+                    </Grid>
+                    <Grid Margin="0,8,0,0">
+                        <Grid.ColumnDefinitions>
+                            <ColumnDefinition Width="*"/>
+                            <ColumnDefinition Width="Auto"/>
+                        </Grid.ColumnDefinitions>
+                        <TextBlock Text="Computer Name" Grid.Column="0"/>
+                        <TextBlock Text="{Binding ComputerName}" Grid.Column="1" FontWeight="SemiBold"/>
+                    </Grid>
+                </StackPanel>
+            </ui:CardControl>
+            
+            <!-- Quick Actions Card -->
+            <ui:CardControl 
+                Grid.Column="0" 
+                Grid.Row="1" 
+                Margin="0,6,6,0" 
+                Icon="FlashFilled24">
+                <ui:CardControl.Header>
+                    <TextBlock Text="Quick Actions" FontWeight="SemiBold"/>
+                </ui:CardControl.Header>
+                <StackPanel>
+                    <ui:Button 
+                        Appearance="Secondary" 
+                        Content="Manage Users" 
+                        Icon="People24" 
+                        Margin="0,12,0,0"
+                        Command="{Binding NavigateToUserManagementCommand}"/>
+                    <ui:Button 
+                        Appearance="Secondary" 
+                        Content="Manage RDP Access" 
+                        Icon="DesktopFlow24" 
+                        Margin="0,8,0,0"
+                        Command="{Binding NavigateToRdpManagementCommand}"/>
+                </StackPanel>
+            </ui:CardControl>
+            
+            <!-- System Info Card -->
+            <ui:CardControl 
+                Grid.Column="1" 
+                Grid.Row="1" 
+                Margin="6,6,0,0" 
+                Icon="Info24">
+                <ui:CardControl.Header>
+                    <TextBlock Text="System Information" FontWeight="SemiBold"/>
+                </ui:CardControl.Header>
+                <StackPanel>
+                    <TextBlock Text="RDP User Control" FontWeight="SemiBold" Margin="0,12,0,0"/>
+                    <TextBlock Text="Version 1.0.0" Margin="0,4,0,0"/>
+                    <TextBlock Text="© 2023 Your Company" Margin="0,4,0,0"/>
+                </StackPanel>
+            </ui:CardControl>
+        </Grid>
+    </Grid>
+</UserControl>
