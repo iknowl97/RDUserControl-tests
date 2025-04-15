@@ -18,7 +18,7 @@ namespace RDUserControl.ViewModels
         [ObservableProperty]
         private string _smtpPassword;
 
-        public ICommand SaveSettingsCommand { get; }
+        public ICommand? SaveSettingsCommand { get; }
 
         public SettingsViewModel(IEmailService emailService)
         {
