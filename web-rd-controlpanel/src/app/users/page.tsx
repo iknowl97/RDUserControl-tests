@@ -1,19 +1,6 @@
 import { useState, useEffect } from 'react';
 import { useRouter } from 'next/router';
-import {
-  Table,
-  TableBody,
-  TableCell,
-  TableHead,
-  TableHeader,
-  TableRow,
-} from '@heroicons/react/20/solid';
-import {
-  Button,
-  Input,
-  Label,
-  Switch,
-} from '@heroicons/react/20/solid';
+import { ChangeEvent } from 'react';
 
 type User = {
   username: string;
@@ -109,46 +96,46 @@ const UserManagement = () => {
   return (
     <div>
       <h1>RD User Management</h1>
-      <Button onClick={() => router.push('/')}>Back to Main</Button>
+      <button onClick={() => router.push('/')} className="px-4 py-2 bg-blue-500 text-white rounded">Back to Main</button>
 
       <h2>User List</h2>
-      <Table>
-        <TableHeader>
-          <TableRow>
-            <TableHead>Username</TableHead>
-            <TableHead>Display Name</TableHead>
-            <TableHead>Domain</TableHead>
-            <TableHead>Enabled</TableHead>
-            <TableHead>RDP Enabled</TableHead>
-            <TableHead>Actions</TableHead>
-          </TableRow>
-        </TableHeader>
-        <TableBody>
+      <table className="min-w-full divide-y divide-gray-300">
+        <thead>
+          <tr>
+            <th className="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">Username</th>
+            <th className="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">Display Name</th>
+            <th className="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">Domain</th>
+            <th className="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">Enabled</th>
+            <th className="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">RDP Enabled</th>
+            <th className="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">Actions</th>
+          </tr>
+        </thead>
+        <tbody className="bg-white divide-y divide-gray-200">
           {users.map((user) => (
-            <TableRow key={user.username}>
-              <TableCell>{user.username}</TableCell>
-              <TableCell>{user.displayName}</TableCell>
-              <TableCell>{user.domain}</TableCell>
-              <TableCell>{user.isEnabled ? 'Yes' : 'No'}</TableCell>
-              <TableCell>{user.isRdpEnabled ? 'Yes' : 'No'}</TableCell>
-              <TableCell>
+            <tr key={user.username} className="hover:bg-gray-50">
+              <td className="px-6 py-4 whitespace-nowrap">{user.username}</td>
+              <td className="px-6 py-4 whitespace-nowrap">{user.displayName}</td>
+              <td className="px-6 py-4 whitespace-nowrap">{user.domain}</td>
+              <td className="px-6 py-4 whitespace-nowrap">{user.isEnabled ? 'Yes' : 'No'}</td>
+              <td className="px-6 py-4 whitespace-nowrap">{user.isRdpEnabled ? 'Yes' : 'No'}</td>
+              <td className="px-6 py-4 whitespace-nowrap">
                 {user.isEnabled ? (
                   <Button onClick={() => disableUser(user.username)}>Disable</Button>
                 ) : (
                   <Button onClick={() => enableUser(user.username)}>Enable</Button>
                 )}
                 <Button onClick={() => resetPassword(user.username)}>Reset Password</Button>
-              </TableCell>
-            </TableRow>
+              </td>
+            </tr>
           ))}
-        </TableBody>
-      </Table>
+        </tbody>
+      </table>
 
       <h2>Add New User</h2>
       <div className="flex flex-col space-y-4">
-        <Input type="text" placeholder="Username" value={username} onChange={(e) => setUsername(e.target.value)} />
-        <Input type="text" placeholder="Display Name" value={displayName} onChange={(e) => setDisplayName(e.target.value)} />
-        <Input type="text" placeholder="Domain" value={domain} onChange={(e) => setDomain(e.target.value)} />
+        <input type="text" placeholder="Username" value={username} onChange={(e: ChangeEvent<HTMLInputElement>) => setUsername(e.target.value)} className="px-3 py-2 border border-gray-300 rounded-md shadow-sm focus:outline-none focus:ring-indigo-500 focus:border-indigo-500" />
+        <input type="text" placeholder="Display Name" value={displayName} onChange={(e: ChangeEvent<HTMLInputElement>) => setDisplayName(e.target.value)} className="px-3 py-2 border border-gray-300 rounded-md shadow-sm focus:outline-none focus:ring-indigo-500 focus:border-indigo-500" />
+        <input type="text" placeholder="Domain" value={domain} onChange={(e: ChangeEvent<HTMLInputElement>) => setDomain(e.target.value)} className="px-3 py-2 border border-gray-300 rounded-md shadow-sm focus:outline-none focus:ring-indigo-500 focus:border-indigo-500" />
         <Label htmlFor="isEnabled">
           Enabled
           <Switch checked={isEnabled} onChange={() => setIsEnabled(!isEnabled)} id="isEnabled" />
@@ -157,7 +144,7 @@ const UserManagement = () => {
           RDP Enabled
           <Switch checked={isRdpEnabled} onChange={() => setIsRdpEnabled(!isRdpEnabled)} id="isRdpEnabled" />
         </Label>
-        <Button onClick={addUser}>Add User</Button>
+        <button onClick={addUser} className="px-4 py-2 bg-green-500 text-white rounded hover:bg-green-600">Add User</button>
       </div>
     </div>
   );

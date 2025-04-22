@@ -8,15 +8,7 @@ namespace RDUserControl.Views
 {
     public partial class RdpManagementPage : Page, IComponentConnector
     {
-        private bool _contentLoaded;
-        private CheckBox? SystemRdpEnabledCheckBox;
-        private Button? EnableSystemRdpButton;
-        private Button? DisableSystemRdpButton;
-        private ListBox? UsersListBox;
-        private Button? EnableRdpForUserButton;
-        private Button? DisableRdpForUserButton;
-        private Button? BatchEnableRdpButton;
-        private Button? BatchDisableRdpButton;
+
         public RdpManagementPage(IRdpService rdpService, IUserManagementService userManagementService, IEmailService emailService)
         {
             InitializeComponent();
@@ -68,14 +60,6 @@ namespace RDUserControl.Views
             }
         }
 
-        internal CheckBox SystemRdpEnabledCheckBox;
-        internal Button EnableSystemRdpButton;
-        internal Button DisableSystemRdpButton;
-        internal ListBox UsersListBox;
-        internal Button EnableRdpForUserButton;
-        internal Button DisableRdpForUserButton;
-        internal Button BatchEnableRdpButton;
-        internal Button BatchDisableRdpButton;
-        private bool _contentLoaded;
+
     }
 }

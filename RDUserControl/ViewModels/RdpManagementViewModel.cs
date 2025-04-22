@@ -4,7 +4,6 @@ using System.Threading.Tasks;
 using CommunityToolkit.Mvvm.Input;
 using RDUserControl.Models;
 using RDUserControl.Services;
-using RDUserControl.Services;
 using System.Threading.Tasks;
 using System.Collections.ObjectModel;
 using System.Windows.Input;
@@ -75,7 +74,7 @@ namespace RDUserControl.ViewModels
             return false;
         }
 
-        public async Task BatchEnableRdpAsync(List<string> usernames)
+        public async Task<bool> BatchEnableRdpAsync(List<string> usernames)
         {
             bool success = false;
             if (_rdpService != null && _emailService != null)
@@ -84,6 +83,7 @@ namespace RDUserControl.ViewModels
                 await _emailService.SendBatchNotificationAsync("RDP Enable", usernames, success);
             }
             await LoadDataAsync();
+            return success;
         }
 
         public async Task<bool> DisableRdpForUserAsync(string username)
@@ -110,7 +110,7 @@ namespace RDUserControl.ViewModels
         {
             if (_rdpService != null)
             {
-                await _rdpService.EnableSystemRdpAsync();
+                await _rdpService.EnableRdpOnSystemAsync();
                 await LoadDataAsync();
             }
         }
@@ -119,12 +119,12 @@ namespace RDUserControl.ViewModels
         {
             if (_rdpService != null)
             {
-                await _rdpService.DisableSystemRdpAsync();
+                await _rdpService.DisableRdpOnSystemAsync();
                 await LoadDataAsync();
             }
         }
 
-        public async Task BatchDisableRdpAsync(List<string> usernames)
+        public async Task<bool> BatchDisableRdpAsync(List<string> usernames)
         {
             bool success = false;
             if (_rdpService != null && _emailService != null)
@@ -133,6 +133,7 @@ namespace RDUserControl.ViewModels
                 await _emailService.SendBatchNotificationAsync("RDP Disable", usernames, success);
             }
             await LoadDataAsync();
+            return success;
         }
     }
 }
