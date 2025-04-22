@@ -11,7 +11,7 @@ using System.Windows.Input;
 
 namespace RDUserControl.ViewModels
 {
-    public partial class RdpManagementViewModel : ObservableObject,IRdpService
+    public partial class RdpManagementViewModel : ObservableObject, IRdpService
     {
         private readonly IRdpService? _rdpService;
         private readonly IUserManagementService? _userManagementService;
@@ -31,55 +31,108 @@ namespace RDUserControl.ViewModels
         public ICommand? DisableSystemRdpCommand { get; private set; }
         public ICommand? RefreshCommand { get; private set; }
 
-        public RdpManagementViewModel(IRdpService rdpService, IUserManagementService userManagementService, IEmailService emailService) {
-            
+        public RdpManagementViewModel(IRdpService rdpService, IUserManagementService userManagementService, IEmailService emailService)
+        {
+            _rdpService = rdpService;
+            _userManagementService = userManagementService;
+            _emailService = emailService;
+
             LoadDataCommand = new RelayCommand(async () => await LoadDataAsync());
             EnableRdpForUserCommand = new RelayCommand<string>(async (username) => await EnableRdpForUserAsync(username!));
             DisableRdpForUserCommand = new RelayCommand<string>(async (username) => await DisableRdpForUserAsync(username));
             BatchEnableRdpCommand = new RelayCommand<List<string>>(async (usernames) => await BatchEnableRdpAsync(usernames));
+            BatchDisableRdpCommand = new RelayCommand<List<string>>(async (usernames) => await BatchDisableRdpAsync(usernames));
+            EnableSystemRdpCommand = new RelayCommand(async () => await EnableSystemRdpAsync());
+            DisableSystemRdpCommand = new RelayCommand(async () => await DisableSystemRdpAsync());
+            RefreshCommand = new RelayCommand(async () => await LoadDataAsync());
         }
 
         public async Task LoadDataAsync()
         {
-             if (_userManagementService != null && _rdpService != null)
-             {
-                  var users = await _userManagementService.GetAllUsersAsync();
-                  Users.Clear();
-                  foreach (var user in users)
-                  {
-                      user.IsRdpEnabled = await _rdpService.IsRdpEnabledForUserAsync(user.Username);
-                      Users.Add(user);
-                  }
-                  SystemRdpEnabled = await _rdpService.IsRdpEnabledOnSystemAsync();
-             }
-        }
-
-        public async Task EnableRdpForUserAsync(string username)
-        {
-            if (await _rdpService.EnableRdpForUserAsync(username))
+            if (_userManagementService != null && _rdpService != null)
             {
-                await LoadDataAsync();
+                var users = await _userManagementService.GetAllUsersAsync();
+                Users.Clear();
+                foreach (var user in users)
+                {
+                    user.IsRdpEnabled = await _rdpService.IsRdpEnabledForUserAsync(user.Username);
+                    Users.Add(user);
+                }
+                SystemRdpEnabled = await _rdpService.IsRdpEnabledOnSystemAsync();
             }
         }
 
-        private async Task BatchEnableRdpAsync(List<string> usernames)
+        public async Task<bool> EnableRdpForUserAsync(string username)
         {
-           bool success = false;
-            if(_rdpService != null && _emailService != null) {
-              success = await _rdpService.BatchEnableRdpAsync(usernames);
-              await _emailService.SendBatchNotificationAsync("RDP Enable", usernames, success);
+            if (string.IsNullOrEmpty(username) || _rdpService == null)
+                return false;
+
+            if (await _rdpService.EnableRdpForUserAsync(username))
+            {
+                await LoadDataAsync();
+                return true;
+            }
+            return false;
+        }
+
+        public async Task BatchEnableRdpAsync(List<string> usernames)
+        {
+            bool success = false;
+            if (_rdpService != null && _emailService != null)
+            {
+                success = await _rdpService.BatchEnableRdpAsync(usernames);
+                await _emailService.SendBatchNotificationAsync("RDP Enable", usernames, success);
             }
             await LoadDataAsync();
         }
 
-        public async Task DisableRdpForUserAsync(string username)
+        public async Task<bool> DisableRdpForUserAsync(string username)
         {
-            if (await _rdpService.DisableRdpForUserAsync(username)) {
+            if (string.IsNullOrEmpty(username) || _rdpService == null)
+                return false;
+
+            if (await _rdpService.DisableRdpForUserAsync(username))
+            {
+                await LoadDataAsync();
+                return true;
+            }
+            return false;
+        }
+
+        public Task<bool> IsRdpEnabledForUserAsync(string username)
+        {
+            if (string.IsNullOrEmpty(username) || _rdpService == null)
+                return Task.FromResult(false);
+            return _rdpService.IsRdpEnabledForUserAsync(username);
+        }
+
+        public async Task EnableSystemRdpAsync()
+        {
+            if (_rdpService != null)
+            {
+                await _rdpService.EnableSystemRdpAsync();
                 await LoadDataAsync();
             }
         }
 
-        public Task<bool> IsRdpEnabledForUserAsync(string username)
-        => _rdpService.IsRdpEnabledForUserAsync(username);
+        public async Task DisableSystemRdpAsync()
+        {
+            if (_rdpService != null)
+            {
+                await _rdpService.DisableSystemRdpAsync();
+                await LoadDataAsync();
+            }
+        }
+
+        public async Task BatchDisableRdpAsync(List<string> usernames)
+        {
+            bool success = false;
+            if (_rdpService != null && _emailService != null)
+            {
+                success = await _rdpService.BatchDisableRdpAsync(usernames);
+                await _emailService.SendBatchNotificationAsync("RDP Disable", usernames, success);
+            }
+            await LoadDataAsync();
+        }
     }
 }

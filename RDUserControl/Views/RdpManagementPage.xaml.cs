@@ -8,22 +8,23 @@ namespace RDUserControl.Views
 {
     public partial class RdpManagementPage : Page, IComponentConnector
     {
-        public RdpManagementPage()
+        private bool _contentLoaded;
+        private CheckBox? SystemRdpEnabledCheckBox;
+        private Button? EnableSystemRdpButton;
+        private Button? DisableSystemRdpButton;
+        private ListBox? UsersListBox;
+        private Button? EnableRdpForUserButton;
+        private Button? DisableRdpForUserButton;
+        private Button? BatchEnableRdpButton;
+        private Button? BatchDisableRdpButton;
+        public RdpManagementPage(IRdpService rdpService, IUserManagementService userManagementService, IEmailService emailService)
         {
             InitializeComponent();
-            DataContext = new RdpManagementViewModel();
+            DataContext = new RdpManagementViewModel(rdpService, userManagementService, emailService);
         }
 
-        
-        public void InitializeComponent()
-        {
-            if (!_contentLoaded)
-            {
-                _contentLoaded = true;
-                System.Uri resourceLocater = new System.Uri("/RDUserControl;component/views/rdpmanagementpage.xaml", System.UriKind.Relative);
-                System.Windows.Application.LoadComponent(this, resourceLocater);
-            }
-        }
+
+
 
         [System.CodeDom.Compiler.GeneratedCodeAttribute("PresentationBuildTasks", "7.0.13.0")]
         [System.ComponentModel.EditorBrowsableAttribute(System.ComponentModel.EditorBrowsableState.Never)]
